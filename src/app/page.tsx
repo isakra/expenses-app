@@ -5,26 +5,34 @@ import Wrapper from "@/components/Wrapper";
 import MyInput from "@/components/MyInput";
 import Item from "@/components/Item";
 import { addExpense } from "@/services/add-expense";
-import { deleteExpense } from "@/services/delete-expense";
+import { deleteExpense } from "@/services/delete-expence";
 import { fetchExpenses } from "@/services/get-all-expenses";
 
+// ✅ Define Expense type
+interface Expense {
+  id: string;
+  name: string;
+  cost: number;
+}
+
 export default function MyExpenses() {
-  const [expenses, setExpenses] = useState([]);
-  const [name, setName] = useState("");
-  const [cost, setCost] = useState("");
-  const [totalCost, setTotalCost] = useState(0);
+  // ✅ Explicitly type useState
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [name, setName] = useState<string>("");
+  const [cost, setCost] = useState<string>("");
+  const [totalCost, setTotalCost] = useState<number>(0);
 
   useEffect(() => {
     async function loadExpenses() {
-      const data = await fetchExpenses();
+      const data: Expense[] = await fetchExpenses();
       setExpenses(data);
-      setTotalCost(data.reduce((sum, exp) => sum + exp.cost, 0));
+      setTotalCost(data.reduce((sum: number, exp: Expense) => sum + exp.cost, 0));
     }
     loadExpenses();
   }, []);
 
   const handleAddExpense = async () => {
-    if (!name || !cost) return;
+    if (!name || !cost || isNaN(Number(cost))) return;
     const newExpense = await addExpense(name, Number(cost));
     if (newExpense) {
       setExpenses([...expenses, newExpense]);

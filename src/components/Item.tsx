@@ -1,11 +1,12 @@
-import { deleteExpense } from "@/services/delete-expense";
+import { deleteExpense } from "@/services/delete-expence";
 import React from "react";
 
-type Expense = {
+// ✅ Define Expense type
+interface Expense {
   id: string;
   name: string;
   cost: number;
-};
+}
 
 type Props = {
   item: Expense;
